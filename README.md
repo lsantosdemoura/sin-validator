@@ -1,61 +1,155 @@
-# sin-validator
+# SIN Validator
 
-This template should help get you started developing with Vue 3 in Vite.
+A simple Vue 3 application for validating Canadian Social Insurance Numbers (SIN). This project uses TypeScript, and Cypress for end-to-end testing.
 
-## Recommended IDE Setup
+## Table of Contents
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- [SIN Validator](#sin-validator)
+  - [Table of Contents](#table-of-contents)
+  - [Overview](#overview)
+  - [Features](#features)
+  - [Installation](#installation)
+    - [Prerequisites](#prerequisites)
+    - [Steps](#steps)
+  - [Usage](#usage)
+    - [Validating a SIN](#validating-a-sin)
+  - [Folder Structure](#folder-structure)
+    - [Core Files](#core-files)
+  - [Testing](#testing)
+    - [Running Tests](#running-tests)
+    - [Test Cases](#test-cases)
+  - [Technologies](#technologies)
+  - [Design decisions](#design-decisions)
 
-## Type Support for `.vue` Imports in TS
+## Overview
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+This application allows users to input a SIN (Social Insurance Number) and validates the input based on:
 
-## Customize configuration
+1. Format check (only 9 digits).
+2. Luhn algorithm validation to verify the SIN's correctness.
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+## Features
 
-## Project Setup
+- Real-time SIN validation.
+- Clear error messages for invalid inputs.
+- Visual feedback with border colors based on validation status.
+- Input is restricted to 9 numeric digits.
 
-```sh
-npm install
+## Installation
+
+### Prerequisites
+
+- **Node.js** and **npm** installed.
+- Vue CLI (optional for running Vue apps).
+
+### Steps
+
+1. **Clone the Repository:**
+
+   ```bash
+   git clone https://github.com/lsantosdemoura/sin-validator.git
+   cd sin-validator
+   ```
+
+2. **Install Dependencies:**
+
+   ```bash
+   npm install
+   ```
+
+3. **Run the Development Server:**
+
+   ```bash
+   npm run dev
+   ```
+
+4. **Build for Production:**
+
+   ```bash
+   npm run build
+   ```
+
+The app should now be running at `http://localhost:5173` (or a port specified in the console output).
+
+## Usage
+
+### Validating a SIN
+
+1. Start typing a SIN into the input field.
+2. The validator will display:
+   - A **green border** and a "Valid SIN" message for valid inputs.
+
+![valid sin screenshot](readme-assets/valid-sin.png)
+
+- A **red border** and an "Invalid SIN" message for invalid inputs or formats.
+
+![invalid sin screen](readme-assets/invalid-sin.png)
+
+## Folder Structure
+
+```
+sin-validator
+├── src
+│   ├── assets              # Static assets for the app
+│   ├── components          # Vue components
+│   │   └── SINValidator.vue  # Main SIN validator component
+│   ├── views          # Vue views
+│   │   └── HomeView.vue  # Root page
+│   ├── useCases            # Business logic
+│   │   └── validateSIN.ts   # Validation logic for SIN
+│   ├── App.vue             # Root component
+│   └── main.ts             # Entry point for the application
+├── cypress                 # Cypress tests and configuration
+│   ├── e2e
+│   │   └── sinValidator.cy.ts # Test cases for the SIN validator
+├── README.md
+└── package.json
+
 ```
 
-### Compile and Hot-Reload for Development
+### Core Files
 
-```sh
-npm run dev
-```
+- **`src/useCases/validateSIN.ts`**: Contains the logic for validating SINs.
+- **`src/components/SINValidator.vue`**: Component with input field, validation, and visual feedback.
 
-### Type-Check, Compile and Minify for Production
+## Testing
 
-```sh
-npm run build
-```
+This project uses **Cypress** for end-to-end testing.
 
-### Run Headed Component Tests with [Cypress Component Testing](https://on.cypress.io/component)
+### Running Tests
 
-```sh
-npm run test:unit:dev # or `npm run test:unit` for headless testing
-```
+1. **Start the Application**: Make sure the app is running locally on `http://localhost:5173`.
+2. **Run Cypress**:
 
-### Run End-to-End Tests with [Cypress](https://www.cypress.io/)
+   ```bash
+   npx cypress run
+   ```
 
-```sh
-npm run test:e2e:dev
-```
+3. Open Cypress UI:
 
-This runs the end-to-end tests against the Vite development server.
-It is much faster than the production build.
+   ```bash
+   npx cypress open
+   ```
 
-But it's still recommended to test the production build with `test:e2e` before deploying (e.g. in CI environments):
+### Test Cases
 
-```sh
-npm run build
-npm run test:e2e
-```
+The Cypress tests include:
 
-### Lint with [ESLint](https://eslint.org/)
+- **Initial State**: Checks for the neutral border and no message when input is empty.
+- **Invalid Format**: Verifies error message and red border for an invalid SIN.
+- **Valid SIN**: Displays a valid message and green border for a correct SIN.
+- **Reset State**: Ensures the state is neutral when input is cleared.
+- **Edge Cases**: Tests for non-numeric characters and other invalid inputs.
 
-```sh
-npm run lint
-```
+## Technologies
+
+- Vue 3
+- TypeScript
+- Lodash for debouncing validation input
+- Cypress for end-to-end testing
+
+## Design decisions
+
+I decided to build a frontend-only app because it would be more responsive than a backend and frontend combination. The calculations are simple enough that they don’t need to be processed on server-side. I chose Vue over React due to its simplicity and my familiarity with it. I also wanted to add only a basic CSS to match the app simplicity.
+
+The project is organized thinking about separation of concerns. The SIN validation logic is in a dedicated `useCases` folder for better reusability and testability and the component just import it for it's usage. I also implemented the lodash debouncing to reduce unnecessary function calls. Finally, I chose Cypress for end-to-end testing to ensure the app works correctly in various scenarios.
