@@ -1,73 +1,54 @@
 <template>
-  <div
-    class="sin-validator"
-    :class="{
-      'valid-border': isValid === true,
-      'invalid-border': isValid === false,
-      'neutral-border': isValid === null,
-    }"
-  >
+  <div class="sin-validator" :class="borderClass">
     <h1>SIN Validator</h1>
     <input
       type="text"
       v-model="sinInput"
-      @input="validateSIN"
+      @input="debouncedValidate"
       maxlength="9"
       placeholder="Enter SIN (9 digits)"
       class="sin-input"
-      :class="{
-        'valid-border': isValid === true,
-        'invalid-border': isValid === false,
-        'neutral-border': isValid === null,
-      }"
+      :class="borderClass"
     />
-    <p v-if="validationMessage" :class="{ valid: isValid, invalid: !isValid }">
+    <p
+      v-if="validationMessage"
+      :class="{ valid: isValid, invalid: isValid === false }"
+    >
       {{ validationMessage }}
     </p>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, type Ref } from 'vue'
+<script setup lang="ts">
+import { ref, computed } from 'vue'
+import { debounce } from 'lodash'
+import { validateSIN } from '@/useCases/validateSIN'
 
-export default defineComponent({
-  name: 'SINValidator',
-  setup() {
-    const sinInput: Ref<string> = ref('')
-    const isValid: Ref<boolean | null> = ref(null)
-    const validationMessage: Ref<string> = ref('')
+const sinInput = ref('')
+const isValid = ref<boolean | null>(null)
 
-    const validateSIN = (): void => {
-      // Clear message if input is empty
-      if (!sinInput.value) {
-        validationMessage.value = ''
-        isValid.value = null // Reset validity if input is cleared
-        return
-      }
+const validate = () => {
+  if (sinInput.value.length === 0) {
+    isValid.value = null
+    return
+  }
+  const result = validateSIN(sinInput.value)
+  isValid.value = result
+}
 
-      const isValidFormat: boolean = /^\d{9}$/.test(sinInput.value)
-      if (isValidFormat) {
-        let sum: number = 0
-        for (let i = 0; i < sinInput.value.length; i++) {
-          let digit: number = parseInt(sinInput.value[i])
-          if (i % 2 === 1) digit *= 2
-          if (digit > 9) digit -= 9
-          sum += digit
-        }
-        isValid.value = sum % 10 === 0
-        validationMessage.value = isValid.value ? 'Valid SIN!' : 'Invalid SIN.'
-      } else {
-        isValid.value = false
-        validationMessage.value = 'Invalid SIN. Please enter 9 digits.'
-      }
-    }
+// Debounce the validate function to avoid excessive calls
+const debouncedValidate = debounce(validate, 100)
 
-    return {
-      sinInput,
-      validationMessage,
-      isValid,
-      validateSIN,
-    }
-  },
+const validationMessage = computed(() => {
+  if (isValid.value === null) return '' // Clear message if input is empty
+  return isValid.value
+    ? 'Valid SIN!'
+    : 'Invalid SIN. Please enter 9 digits or check validity.'
 })
+
+const borderClass = computed(() => ({
+  'valid-border': isValid.value === true,
+  'invalid-border': isValid.value === false,
+  'neutral-border': isValid.value === null,
+}))
 </script>
