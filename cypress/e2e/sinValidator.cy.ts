@@ -14,7 +14,7 @@ describe('SIN Validator Component', () => {
     cy.get('.sin-input').type('12345678') // Only 8 digits, invalid format
     cy.get('p')
       .should('be.visible')
-      .and('contain', 'Invalid SIN. Please enter 9 digits.')
+      .and('contain', 'Invalid SIN. Please enter 9 digits or check validity.')
       .and('have.class', 'invalid')
     cy.get('.sin-input').should('have.class', 'invalid-border')
   })
@@ -32,7 +32,18 @@ describe('SIN Validator Component', () => {
   it('resets the state to neutral when input is cleared', () => {
     cy.get('.sin-input').type('123456789')
     cy.get('.sin-input').clear()
-    cy.get('.sin-input').should('have.class', 'neutral-border')
+    cy.get('.sin-input')
+      .should('have.class', 'neutral-border')
+      .and('have.value', '')
     cy.get('p').should('not.exist')
+  })
+
+  it('shows an error message for SIN with non-numeric characters', () => {
+    cy.get('.sin-input').type('12345abc9')
+    cy.get('p')
+      .should('be.visible')
+      .and('contain', 'Invalid SIN. Please enter 9 digits or check validity.')
+      .and('have.class', 'invalid')
+    cy.get('.sin-input').should('have.class', 'invalid-border')
   })
 })
