@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue'
+import SINValidator from '../components/SINValidator.vue'
 </script>
 
 <template>
   <main>
-    <TheWelcome />
+    <SINValidator />
   </main>
 </template>

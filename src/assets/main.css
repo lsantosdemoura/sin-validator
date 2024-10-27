@@ -1,35 +1,71 @@
-@import './base.css';
-
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
+.sin-validator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
   padding: 2rem;
-  font-weight: normal;
+  border-radius: 8px;
+  background-color: #f4f5f7;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  width: 90%;
+  justify-content: center;
+  margin: 0;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: 'Roboto', sans-serif;
 }
 
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
+h1 {
+  font-size: 1.8rem;
+  color: #333;
 }
 
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
+.sin-input {
+  font-size: 16px;
+  padding: 8px;
+  margin: 16px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.valid {
+  color: green;
+}
+
+.invalid {
+  color: red;
+}
+
+.valid-border {
+  border: 2px solid green;
+}
+
+.invalid-border {
+  border: 2px solid red;
+}
+
+.neutral-border {
+  border: 2px solid #ccc;
+}
+
+/* Responsive Styling */
+@media (max-width: 768px) {
+  .sin-validator {
+    padding: 1.5rem;
   }
-}
 
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
+  h1 {
+    font-size: 1.5rem;
   }
 
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
+  input,
+  button {
+    font-size: 0.9rem;
+  }
+
+  .result {
+    font-size: 1rem;
   }
 }
