@@ -20,6 +20,7 @@ A simple Vue 3 application for validating Canadian Social Insurance Numbers (SIN
     - [Test Cases](#test-cases)
   - [Technologies](#technologies)
   - [Design decisions](#design-decisions)
+  - [Possible improvements](#possible-improvements)
 
 ## Overview
 
@@ -150,6 +151,10 @@ The Cypress tests include:
 
 ## Design decisions
 
-I decided to build a frontend-only app because it would be more responsive than a backend and frontend combination. The calculations are simple enough that they don’t need to be processed on server-side. I chose Vue over React due to its simplicity and my familiarity with it. I also wanted to add only a basic CSS to match the app simplicity.
+I decided to build a frontend-only app because it would be fastest than developing both backend and frontend as it wouldn't need to increase the project scope. The calculations are simple enough that they don’t need to be processed on server-side. I chose Vue over React due to its simplicity and its grow as the tool chosen on projects using Django — since my main experience is with Python — so I wanted to test it and increase my knowledge on possible full-stack projects in the future. Finally I also wanted to add only a basic CSS to match the app simplicity.
 
-The project is organized thinking about separation of concerns. The SIN validation logic is in a dedicated `useCases` folder for better reusability and testability and the component just import it for it's usage. I also implemented the lodash debouncing to reduce unnecessary function calls. Finally, I chose Cypress for end-to-end testing to ensure the app works correctly in various scenarios.
+The project is organized thinking about separation of concerns. The SIN validation logic is in a dedicated `useCases` folder for better reusability and testability and the component just import it for it's usage, the Luhn algorithm is also separated as it can be used on other situations as in Credit card and IMEI numbers. I also implemented the lodash debouncing to reduce unnecessary function calls. Finally, I chose Cypress for end-to-end testing to ensure the app works correctly in various scenarios.
+
+## Possible improvements
+
+As the Luhn algorithm is separated from the rest of the code, this creates a possibility of having different validations on the same app, and this can grow even more by isolating other common functions for validating other types of code such as a function that removes letters from a string or another function that calculates the size of a string. Another great opportunity is creating a generator of those codes, as there are already validations, creating valid codes wouldn't be so hard to implement
